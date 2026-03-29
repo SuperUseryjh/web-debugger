@@ -1,0 +1,32 @@
+{
+  "name": "web-debugger",
+  "version": "2.2.0",
+  "description": "Modern network request debugging assistant with TypeScript",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "dev": "node scripts/build.js --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prebuild": "npm run typecheck"
+  },
+  "keywords": [
+    "userscript",
+    "network-debugger",
+    "fetch",
+    "xhr",
+    "websocket"
+  ],
+  "author": "YaoOnion",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "esbuild": "^0.19.8",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  }
+}
