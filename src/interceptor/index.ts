@@ -17,17 +17,17 @@ export class Interceptor {
       const _open = xhr.open;
       const _send = xhr.send;
 
-      xhr.open = function (method: string, url: string | URL) {
+      xhr.open = function (this: XMLHttpRequest, method: string, url: string | URL) {
         (this as unknown as { _ctx: XHRContext })._ctx = {
           method,
           url: url.toString(),
           time: Utils.getTime(),
           payload: undefined,
         };
-        return _open.apply(this, arguments as unknown as Parameters<typeof _open>);
+        return (_open as any).call(this, method, url);
       };
 
-      xhr.send = function (data?: Document | XMLHttpRequestBodyInit | null) {
+      xhr.send = function (this: XMLHttpRequest, data?: Document | XMLHttpRequestBodyInit | null) {
         const ctx = (this as unknown as { _ctx: XHRContext })._ctx;
         ctx.payload = data ?? "None";
 
@@ -43,7 +43,7 @@ export class Interceptor {
           });
         });
 
-        return _send.apply(this, arguments as unknown as Parameters<typeof _send>);
+        return (_send as any).call(this, data);
       };
 
       return xhr;
@@ -118,7 +118,7 @@ export class Interceptor {
       });
 
       const originalSend = ws.send;
-      ws.send = function (data: string | ArrayBuffer | Blob | ArrayBufferView) {
+      ws.send = function (this: WebSocket, data: string | ArrayBuffer | Blob | ArrayBufferView) {
         UIManager.addLog({
           type: "WS",
           url: urlStr,
@@ -128,7 +128,7 @@ export class Interceptor {
           payload: data,
           response: "[Message Sent]",
         });
-        return originalSend.apply(this, arguments as unknown as Parameters<typeof originalSend>);
+        return (originalSend as any).call(this, data);
       };
 
       ws.addEventListener("message", function (e) {
