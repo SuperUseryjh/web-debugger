@@ -1,6 +1,6 @@
-import { CONFIG } from '../config/index.js';
-import { Utils } from '../utils/index.js';
-import type { LogData } from '../types/index.js';
+import { CONFIG } from "../config/index.js";
+import { Utils } from "../utils/index.js";
+import type { LogData } from "../types/index.js";
 
 export class UIManager {
   static panel: HTMLElement | null = null;
@@ -15,7 +15,7 @@ export class UIManager {
   }
 
   private static injectStyles(): void {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       #net-dbg-root { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: ${CONFIG.THEME.text}; }
       #net-dbg-panel {
@@ -91,8 +91,8 @@ export class UIManager {
   }
 
   private static createElements(): void {
-    const root = document.createElement('div');
-    root.id = 'net-dbg-root';
+    const root = document.createElement("div");
+    root.id = "net-dbg-root";
 
     root.innerHTML = `
       <div id="net-dbg-panel">
@@ -111,19 +111,19 @@ export class UIManager {
     `;
     (document.body || document.documentElement).appendChild(root);
 
-    this.panel = document.getElementById('net-dbg-panel');
-    this.content = document.getElementById('net-dbg-content');
-    this.ball = document.getElementById('net-dbg-ball');
+    this.panel = document.getElementById("net-dbg-panel");
+    this.content = document.getElementById("net-dbg-content");
+    this.ball = document.getElementById("net-dbg-ball");
   }
 
   private static setupEvents(): void {
-    const btnClear = document.getElementById('btn-clear');
-    const btnMin = document.getElementById('btn-min');
+    const btnClear = document.getElementById("btn-clear");
+    const btnMin = document.getElementById("btn-min");
 
     if (btnClear) {
       btnClear.onclick = () => {
         if (this.content) {
-          this.content.innerHTML = '';
+          this.content.innerHTML = "";
           this.updateCount();
         }
       };
@@ -140,7 +140,7 @@ export class UIManager {
     }
 
     if (this.panel) {
-      this.makeDraggable(this.panel, '#net-dbg-header');
+      this.makeDraggable(this.panel, "#net-dbg-header");
     }
 
     if (this.ball) {
@@ -154,15 +154,15 @@ export class UIManager {
       if (this.ball && this.panel) {
         this.ball.style.top = this.panel.style.top;
         this.ball.style.left = this.panel.style.left;
-        this.panel.style.setProperty('display', 'none', 'important');
-        this.ball.style.setProperty('display', 'flex', 'important');
+        this.panel.style.setProperty("display", "none", "important");
+        this.ball.style.setProperty("display", "flex", "important");
       }
     } else {
       if (this.ball && this.panel) {
         this.panel.style.top = this.ball.style.top;
         this.panel.style.left = this.ball.style.left;
-        this.panel.style.setProperty('display', 'flex', 'important');
-        this.ball.style.setProperty('display', 'none', 'important');
+        this.panel.style.setProperty("display", "flex", "important");
+        this.ball.style.setProperty("display", "none", "important");
       }
     }
   }
@@ -179,15 +179,15 @@ export class UIManager {
 
     const onMouseDown = (e: MouseEvent): void => {
       isDragging = true;
-      el.dataset.dragging = '';
+      el.dataset.dragging = "";
       startX = e.clientX;
       startY = e.clientY;
       initialX = el.offsetLeft;
       initialY = el.offsetTop;
-      el.style.right = 'auto';
+      el.style.right = "auto";
 
-      window.addEventListener('mousemove', onMouseMove, { passive: false });
-      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener("mousemove", onMouseMove, { passive: false });
+      window.addEventListener("mouseup", onMouseUp);
       e.preventDefault();
       e.stopPropagation();
     };
@@ -198,51 +198,51 @@ export class UIManager {
       const dy = e.clientY - startY;
 
       if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
-        el.dataset.dragging = 'true';
+        el.dataset.dragging = "true";
       }
 
-      el.style.setProperty('left', `${initialX + dx}px`, 'important');
-      el.style.setProperty('top', `${initialY + dy}px`, 'important');
+      el.style.setProperty("left", `${initialX + dx}px`, "important");
+      el.style.setProperty("top", `${initialY + dy}px`, "important");
       e.preventDefault();
     };
 
     const onMouseUp = (): void => {
       isDragging = false;
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
       setTimeout(() => {
-        el.removeAttribute('data-dragging');
+        el.removeAttribute("data-dragging");
       }, 50);
     };
 
-    (handle as HTMLElement).addEventListener('mousedown', onMouseDown);
+    (handle as HTMLElement).addEventListener("mousedown", onMouseDown);
   }
 
   static addLog(data: LogData): void {
     if (!this.content) return;
-    const entry = document.createElement('div');
+    const entry = document.createElement("div");
     entry.className = `log-entry type-${data.type.toLowerCase()}`;
 
     const statusClass =
-      typeof data.status === 'number'
+      typeof data.status === "number"
         ? data.status >= 500
-          ? 'status-5xx'
+          ? "status-5xx"
           : data.status >= 400
-            ? 'status-4xx'
-            : 'status-2xx'
-        : '';
+            ? "status-4xx"
+            : "status-2xx"
+        : "";
 
     entry.innerHTML = `
       <div class="log-summary">
         <span class="log-type type-${data.type.toLowerCase()}">${data.type}</span>
-        <span class="log-method">${data.method || 'WS'}</span>
+        <span class="log-method">${data.method || "WS"}</span>
         <span class="log-url" title="${data.url}">${data.url}</span>
-        <span class="log-status ${statusClass}">${data.status || '--'}</span>
+        <span class="log-status ${statusClass}">${data.status || "--"}</span>
       </div>
       <div class="log-detail">
         <div class="detail-section">
           <div class="detail-title">General</div>
-          <div class="detail-body">Time: ${data.time}\nURL: ${data.url}\nMethod: ${data.method || 'WebSocket'}</div>
+          <div class="detail-body">Time: ${data.time}\nURL: ${data.url}\nMethod: ${data.method || "WebSocket"}</div>
         </div>
         <div class="detail-section">
           <div class="detail-title">Request Payload</div>
@@ -255,7 +255,7 @@ export class UIManager {
       </div>
     `;
 
-    entry.onclick = () => entry.classList.toggle('expanded');
+    entry.onclick = () => entry.classList.toggle("expanded");
     this.content.appendChild(entry);
 
     if (!this.isMinimized) this.content.scrollTop = this.content.scrollHeight;
@@ -268,7 +268,7 @@ export class UIManager {
   private static updateCount(): void {
     if (!this.ball || !this.content) return;
     const count = this.content.childNodes.length;
-    const countEl = document.getElementById('net-dbg-ball-count');
+    const countEl = document.getElementById("net-dbg-ball-count");
     if (countEl) countEl.innerText = count.toString();
   }
 }

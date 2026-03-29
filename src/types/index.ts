@@ -1,5 +1,5 @@
 export interface LogData {
-  type: 'FETCH' | 'XHR' | 'WS';
+  type: "FETCH" | "XHR" | "WS";
   url: string;
   method?: string;
   time: string;

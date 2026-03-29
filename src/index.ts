@@ -1,5 +1,5 @@
-import { UIManager } from './ui/index.js';
-import { Interceptor } from './interceptor/index.js';
+import { UIManager } from "./ui/index.js";
+import { Interceptor } from "./interceptor/index.js";
 
 const init = (): void => {
   if (window._NET_DEBUGGER_INIT) return;
